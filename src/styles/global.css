@@ -1,0 +1,367 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-cream: #fff7f0;
+    --color-peach2: #ffe5d2;
+    --color-peach: #ffb38a;
+    --color-coral: #ff8f70;
+    --color-rose: #d98c8c;
+    --color-yellow: #fff0c9;
+    --color-ink: #3d2b28;
+    --color-muted: #806b65;
+    --color-card: #fffcf8;
+    --color-border: #f2d5c5;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-cream text-ink font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading uppercase tracking-wide2;
+  }
+
+  /* Tabular data (particulars, dates, phone numbers) — real measurements get
+     real numeral alignment, not just a monospace costume. */
+  .particulars-table td,
+  .figure {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-coral);
+    color: var(--color-ink);
+  }
+
+  * {
+    scrollbar-color: var(--color-peach) var(--color-peach2);
+    scrollbar-width: thin;
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-peach2);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-peach);
+    border-radius: 999px;
+    border: 3px solid var(--color-peach2);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-coral);
+  }
+
+  a,
+  button,
+  [tabindex] {
+    outline-offset: 2px;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+
+  .skip-link {
+    @apply fixed left-2 top-[-100px] z-[999] rounded bg-ink px-4 py-2 font-body text-sm font-semibold text-cream transition-[top];
+  }
+  .skip-link:focus {
+    @apply top-2;
+  }
+}
+
+@layer components {
+  .particulars-table {
+    @apply w-full border-collapse font-mono text-sm;
+  }
+  .particulars-table th,
+  .particulars-table td {
+    @apply border border-border px-3 py-2 text-left;
+  }
+  .particulars-table th {
+    @apply bg-ink text-cream font-semibold uppercase tracking-wide2 text-xs;
+  }
+  .particulars-table td {
+    @apply bg-card;
+  }
+
+  /* Small mono data labels — real data captions (dt/th, form labels), never
+     an eyebrow sitting above a heading. */
+  .data-label {
+    @apply font-mono text-xs uppercase tracking-wide2 text-ink;
+  }
+  .data-label-muted {
+    @apply font-mono text-xs uppercase tracking-wide2 text-muted;
+  }
+
+  .hotspot-marker {
+    @apply flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-full border border-coral/70 bg-ink/90 px-3 py-1.5 font-mono text-xs uppercase tracking-wide2 text-cream shadow-lg backdrop-blur-sm transition-colors;
+  }
+  .hotspot-marker:hover,
+  .hotspot-marker--active {
+    @apply bg-coral text-ink;
+  }
+  .hotspot-marker__dot {
+    @apply relative block h-2 w-2 rounded-full bg-coral;
+  }
+  .hotspot-marker--active .hotspot-marker__dot,
+  .hotspot-marker:hover .hotspot-marker__dot {
+    @apply bg-ink;
+  }
+  .hotspot-marker__dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    border: 1px solid currentColor;
+    opacity: 0;
+    animation: beacon-pulse 2.2s ease-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hotspot-marker__dot::after {
+      animation: none;
+    }
+  }
+  @keyframes beacon-pulse {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: -4px;
+    height: 2px;
+    background: var(--color-coral);
+    transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-link:hover::after,
+  .nav-link--active::after {
+    right: 0;
+  }
+
+  .route-fade {
+    animation: route-fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes route-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .route-fade {
+      animation: none;
+    }
+  }
+
+  /* Native View Transitions — crossfade with a slight rise, matched to
+     .route-fade's curve so the fallback and the native path feel identical. */
+  ::view-transition-old(root) {
+    animation: view-fade-out 0.3s cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: view-fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes view-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes view-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+  }
+
+  /* ---- Glassmorphism (frost + translucency + edge + depth) ---- */
+  .glass {
+    position: relative;
+    background: rgba(255, 252, 248, 0.55);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 8px 32px rgba(61, 43, 40, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65),
+      inset 0 -1px 0 rgba(61, 43, 40, 0.05);
+  }
+  .glass-heavy {
+    background: rgba(255, 252, 248, 0.62);
+    backdrop-filter: blur(28px) saturate(170%);
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    box-shadow:
+      0 16px 48px rgba(61, 43, 40, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -1px 0 rgba(61, 43, 40, 0.06);
+  }
+  .glass-dark {
+    background: rgba(61, 43, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 229, 210, 0.25);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+  /* Specular sweep — the "liquid" surface breathing, ambient + slow. */
+  .glass-sweep::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.35) 42%,
+      rgba(255, 255, 255, 0.05) 60%,
+      transparent 80%
+    );
+    background-size: 220% 220%;
+    background-position: 0% 0%;
+    animation: glass-sweep 9s ease-in-out infinite;
+  }
+  @keyframes glass-sweep {
+    0% {
+      background-position: 110% 110%;
+    }
+    50% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 110% 110%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .glass-sweep::before {
+      animation: none;
+      background-position: 40% 40%;
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass,
+    .glass-heavy {
+      background: var(--color-card);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .glass-dark {
+      background: var(--color-ink);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+    .glass-sweep::before {
+      display: none;
+    }
+  }
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass,
+    .glass-heavy {
+      background: rgba(255, 252, 248, 0.94);
+    }
+    .glass-dark {
+      background: rgba(61, 43, 40, 0.94);
+    }
+  }
+
+  .three-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .three-stage__poster,
+  .three-stage__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.6s ease;
+  }
+  .three-stage__poster {
+    object-fit: cover;
+  }
+  .three-stage__canvas canvas {
+    display: block;
+  }
+
+  .page-surface {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
+  .page-surface--opaque {
+    @apply bg-cream;
+  }
+  .viewer-slot {
+    background: transparent;
+    /* This section only reserves layout space above the fixed 3D canvas —
+       it must not steal pointer events meant for orbit-drag/hotspots. */
+    pointer-events: none;
+  }
+  .viewer-slot > * {
+    pointer-events: auto;
+  }
+
+  /* Press feedback: instant, GPU-cheap (transform only). */
+  .press {
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .press:active {
+    transform: scale(0.96);
+  }
+}

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /portal
+Disallow: /team
+Disallow: /login
+Disallow: /signup
+Disallow: /thank-you
+
+Sitemap: https://gss-shipping.com/sitemap.xml
