@@ -33,7 +33,7 @@ export type CameraPose = {
   position: [number, number, number]
 }
 
-const DEFAULT_AZIMUTH = 0.65
+const DEFAULT_AZIMUTH = 0.92
 
 export function getDefaultPose(): CameraPose {
   const { radius, polar } = CAMERA_DEFAULT
@@ -44,7 +44,7 @@ export function getDefaultPose(): CameraPose {
     // Aimed at the vessel's midsection (between main deck and crane tips)
     // rather than the waterline, so the fixed 1.11 rad polar angle still
     // lets a sliver of horizon/sky read above the hull.
-    target: [0, 14, 0],
+    target: [-3, 8.6, 0],
     position: [x, y, z],
   }
 }
